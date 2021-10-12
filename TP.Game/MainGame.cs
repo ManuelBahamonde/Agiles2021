@@ -20,7 +20,7 @@ namespace TP.Game
         #endregion
 
         #region Methods
-        public bool Try(string word)
+        public bool TryWord(string word)
         {
             if (_secretWord != word)
             {
@@ -29,6 +29,16 @@ namespace TP.Game
             }
 
             return true;
+        }
+
+        public bool TryLetter(char letter)
+        {
+            if (letter == '\0' || !char.IsLetter(letter))
+                throw new ArgumentException("Invalid Letter. It must be an alphabetic character.");
+
+            AttemptsLeft--;
+
+            return _secretWord.Contains(letter);
         }
         #endregion
     }

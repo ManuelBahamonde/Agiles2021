@@ -14,6 +14,57 @@ namespace Tp.Tests
         private readonly MainGame game = new MainGame(3, "Manuel");
 
         [TestMethod]
+        public void InitGame_NameIsCorrect()
+        {
+            // Arrange
+            var name = "Manuel";
+            var expected = "Manuel";
+
+            // Act
+            var game = new MainGame(3, name);
+
+            // Assert
+            Assert.AreEqual(expected, game.Name);
+        }
+
+        [TestMethod]
+        public void TryLetter_IsCorrect()
+        {
+            // Arrange
+            var letter = 'c';
+
+            // Act
+            var result = game.TryLetter(letter);
+
+            // Assert
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void TryLetter_IsIncorrect()
+        {
+            // Arrange
+            var letter = 'x';
+
+            // Act
+            var result = game.TryLetter(letter);
+
+            // Assert
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TryLetter_IsInvalid()
+        {
+            // Arrange
+            var letter = '1';
+
+            // Act
+            game.TryLetter(letter);
+        }
+
+        [TestMethod]
         public void TryWord_IsCorrect()
         {
             // Arrange
@@ -21,7 +72,7 @@ namespace Tp.Tests
             var expected = true;
 
             // Act
-            var actual = game.Try(word);
+            var actual = game.TryWord(word);
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -35,7 +86,7 @@ namespace Tp.Tests
             var expected = false;
 
             // Act
-            var actual = game.Try(word);
+            var actual = game.TryWord(word);
 
             // Assert
             Assert.AreEqual(expected, actual);
