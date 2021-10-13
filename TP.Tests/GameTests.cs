@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tp.Models;
 using TP.Game;
 
 namespace Tp.Tests
@@ -11,8 +12,10 @@ namespace Tp.Tests
     [TestClass]
     public class GameTests
     {
-        private readonly MainGame game = new MainGame(3, "Manuel");
+        private readonly MainGame game = new MainGame(3, "Manuel", Difficulty.Easy);
 
+        #region Init
+        #region Name
         [TestMethod]
         public void InitGame_NameIsCorrect()
         {
@@ -21,17 +24,61 @@ namespace Tp.Tests
             var expected = "Manuel";
 
             // Act
-            var game = new MainGame(3, name);
+            var game = new MainGame(3, name, Difficulty.Easy);
 
             // Assert
             Assert.AreEqual(expected, game.Name);
         }
+        #endregion
 
+        #region Difficulty
+        [TestMethod]
+        public void InitGame_EasyDifficulty()
+        {
+            // Arrange
+            var word = "puma";
+
+            // Act
+            var game = new MainGame(3, "Manuel", Difficulty.Easy);
+
+            // Assert
+            Assert.IsTrue(game.TryWord(word));
+        }
+
+        [TestMethod]
+        public void InitGame_MediumDifficulty()
+        {
+            // Arrange
+            var word = "leopardo";
+
+            // Act
+            var game = new MainGame(3, "Manuel", Difficulty.Medium);
+
+            // Assert
+            Assert.IsTrue(game.TryWord(word));
+        }
+
+        [TestMethod]
+        public void InitGame_HardDifficulty()
+        {
+            // Arrange
+            var word = "hipopotamo";
+
+            // Act
+            var game = new MainGame(3, "Manuel", Difficulty.Hard);
+
+            // Assert
+            Assert.IsTrue(game.TryWord(word));
+        }
+        #endregion
+        #endregion
+
+        #region TryLetter
         [TestMethod]
         public void TryLetter_IsCorrect()
         {
             // Arrange
-            var letter = 'c';
+            var letter = 'u';
 
             // Act
             var result = game.TryLetter(letter);
@@ -63,12 +110,14 @@ namespace Tp.Tests
             // Act
             game.TryLetter(letter);
         }
+        #endregion
 
+        #region TryWord
         [TestMethod]
         public void TryWord_IsCorrect()
         {
             // Arrange
-            var word = "Correcta";
+            var word = "puma";
             var expected = true;
 
             // Act
@@ -91,5 +140,6 @@ namespace Tp.Tests
             // Assert
             Assert.AreEqual(expected, actual);
         }
+        #endregion
     }
 }

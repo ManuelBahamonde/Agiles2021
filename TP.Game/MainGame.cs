@@ -1,4 +1,5 @@
 ﻿using System;
+using Tp.Models;
 
 namespace TP.Game
 {
@@ -8,21 +9,31 @@ namespace TP.Game
         private readonly string _secretWord;
         public int AttemptsLeft { get; private set; }
         public string Name { get; }
+        public Difficulty Difficulty { get; }
         #endregion
 
         #region Constructor
-        public MainGame(int numberOfAttempts, string name)
+        public MainGame(int numberOfAttempts, string name, Difficulty difficulty)
         {
-            _secretWord = "Correcta"; // TODO: Generate a random word and assign it to _secretWord
             AttemptsLeft = numberOfAttempts;
             Name = name;
+            Difficulty = difficulty;
+
+            // TODO: Generate a random word and assign it to _secretWord
+            _secretWord = difficulty switch
+            {
+                Difficulty.Easy => "puma",
+                Difficulty.Medium => "leopardo",
+                Difficulty.Hard => "hipopotamo",
+                _ => throw new ArgumentException("Invalid difficulty. It must be easy, medium or hard")
+            };
         }
         #endregion
 
         #region Methods
         public bool TryWord(string word)
         {
-            if (_secretWord != word)
+            if (_secretWord != word.ToLower())
             {
                 AttemptsLeft--;
                 return false;
@@ -38,7 +49,7 @@ namespace TP.Game
 
             AttemptsLeft--;
 
-            return _secretWord.Contains(letter);
+            return _secretWord.Contains(letter, StringComparison.InvariantCultureIgnoreCase);
         }
         #endregion
     }
