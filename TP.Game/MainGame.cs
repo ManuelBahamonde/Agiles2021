@@ -31,25 +31,35 @@ namespace TP.Game
         #endregion
 
         #region Methods
-        public bool TryWord(string word)
+        public TryResponse TryWord(string word)
         {
-            if (_secretWord != word.ToLower())
-            {
-                AttemptsLeft--;
-                return false;
-            }
+            var response = new TryResponse();
 
-            return true;
+            var isMatch = _secretWord == word.ToLower();
+            if (!isMatch)
+                AttemptsLeft--;
+
+            response.AttemptsLeft = AttemptsLeft;
+            response.Match = isMatch;
+
+            return response;
         }
 
-        public bool TryLetter(char letter)
+        public TryResponse TryLetter(char letter)
         {
+            var response = new TryResponse();
+
             if (letter == '\0' || !char.IsLetter(letter))
                 throw new ArgumentException("Invalid Letter. It must be an alphabetic character.");
 
-            AttemptsLeft--;
+            var isMatch = _secretWord.Contains(letter, StringComparison.InvariantCultureIgnoreCase);
+            if (!isMatch)
+                AttemptsLeft--;
 
-            return _secretWord.Contains(letter, StringComparison.InvariantCultureIgnoreCase);
+            response.Match = isMatch;
+            response.AttemptsLeft = AttemptsLeft;
+
+            return response;
         }
         #endregion
     }

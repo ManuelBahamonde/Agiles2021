@@ -42,7 +42,7 @@ namespace Tp.Tests
             var game = new MainGame(3, "Manuel", Difficulty.Easy);
 
             // Assert
-            Assert.IsTrue(game.TryWord(word));
+            Assert.IsTrue(game.TryWord(word).Match);
         }
 
         [TestMethod]
@@ -55,7 +55,7 @@ namespace Tp.Tests
             var game = new MainGame(3, "Manuel", Difficulty.Medium);
 
             // Assert
-            Assert.IsTrue(game.TryWord(word));
+            Assert.IsTrue(game.TryWord(word).Match);
         }
 
         [TestMethod]
@@ -68,7 +68,7 @@ namespace Tp.Tests
             var game = new MainGame(3, "Manuel", Difficulty.Hard);
 
             // Assert
-            Assert.IsTrue(game.TryWord(word));
+            Assert.IsTrue(game.TryWord(word).Match);
         }
         #endregion
         #endregion
@@ -84,7 +84,7 @@ namespace Tp.Tests
             var result = game.TryLetter(letter);
 
             // Assert
-            Assert.IsTrue(result);
+            Assert.IsTrue(result.Match);
         }
 
         [TestMethod]
@@ -97,7 +97,7 @@ namespace Tp.Tests
             var result = game.TryLetter(letter);
 
             // Assert
-            Assert.IsFalse(result);
+            Assert.IsFalse(result.Match);
         }
 
         [TestMethod]
@@ -110,6 +110,34 @@ namespace Tp.Tests
             // Act
             game.TryLetter(letter);
         }
+
+        [TestMethod]
+        public void TryLetter_AttemptsLeft_Correct()
+        {
+            // Arrange
+            var letter = 'u';
+            var expectedAttemptsLeft = game.AttemptsLeft;
+
+            // Act
+            var response = game.TryLetter(letter);
+
+            // Assert
+            Assert.AreEqual(response.AttemptsLeft, expectedAttemptsLeft);
+        }
+
+        [TestMethod]
+        public void TryLetter_AttemptsLeft_Incorrect()
+        {
+            // Arrange
+            var letter = 'x';
+            var expectedAttemptsLeft = game.AttemptsLeft - 1;
+
+            // Act
+            var response = game.TryLetter(letter);
+
+            // Assert
+            Assert.AreEqual(response.AttemptsLeft, expectedAttemptsLeft);
+        }
         #endregion
 
         #region TryWord
@@ -121,10 +149,10 @@ namespace Tp.Tests
             var expected = true;
 
             // Act
-            var actual = game.TryWord(word);
+            var response = game.TryWord(word);
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, response.Match);
         }
 
         [TestMethod]
@@ -135,10 +163,38 @@ namespace Tp.Tests
             var expected = false;
 
             // Act
-            var actual = game.TryWord(word);
+            var response = game.TryWord(word);
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, response.Match);
+        }
+
+        [TestMethod]
+        public void TryWord_AttemptsLeft_Correct()
+        {
+            // Arrange
+            var word = "Incorrecto";
+            var expectedAttemptsLeft = game.AttemptsLeft - 1;
+
+            // Act
+            var response = game.TryWord(word);
+
+            // Assert
+            Assert.AreEqual(response.AttemptsLeft, expectedAttemptsLeft);
+        }
+
+        [TestMethod]
+        public void TryWord_AttemptsLeft_Incorrect()
+        {
+            // Arrange
+            var word = "puma";
+            var expectedAttemptsLeft = game.AttemptsLeft;
+
+            // Act
+            var response = game.TryWord(word);
+
+            // Assert
+            Assert.AreEqual(response.AttemptsLeft, expectedAttemptsLeft);
         }
         #endregion
     }
