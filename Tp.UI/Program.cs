@@ -2,11 +2,11 @@
 
 namespace Tp.UI
 {
-    class Program
+    static class Program
     {
         static void Main(string[] args)
         {
-            var name = InputName();
+            // var name = InputName();
         }
 
         static string InputName()

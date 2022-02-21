@@ -273,7 +273,7 @@ namespace Tp.Tests
             game.TryWord(word);
 
             // Assert
-            Assert.ThrowsException<Exception>(() => game.TryWord(word), "Game Over: the player won");
+            Assert.ThrowsException<InvalidOperationException>(() => game.TryWord(word), "Game Over: the player won");
         }
         [TestMethod]
         public void TryWord_LoseGame()
@@ -291,7 +291,7 @@ namespace Tp.Tests
             game.TryWord(word);
 
             // Assert
-            Assert.ThrowsException<Exception>(() => game.TryWord(word), "Game Over: the player lost");
+            Assert.ThrowsException<InvalidOperationException>(() => game.TryWord(word), "Game Over: the player lost");
         }
 
         [TestMethod]
@@ -310,7 +310,7 @@ namespace Tp.Tests
             game.TryLetter(letter4);
 
             // Assert
-            Assert.ThrowsException<Exception>(() => game.TryLetter(letter1), "Game Over: the player won");
+            Assert.ThrowsException<InvalidOperationException>(() => game.TryLetter(letter1), "Game Over: the player won");
         }
         [TestMethod]
         public void TryLetter_LoseGame()
@@ -334,7 +334,7 @@ namespace Tp.Tests
             game.TryLetter(letter7);
 
             // Assert
-            Assert.ThrowsException<Exception>(() => game.TryLetter(letter1), "Game Over: the player lost");
+            Assert.ThrowsException<InvalidOperationException>(() => game.TryLetter(letter1), "Game Over: the player lost");
         }
         #endregion
     }

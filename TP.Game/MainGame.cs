@@ -59,10 +59,10 @@ namespace TP.Game
         private void ValidateTry()
         {
             if (CorrectChars.Count == _secretWord.Length)
-                throw new Exception("Game Over: the player won");
+                throw new InvalidOperationException("Game Over: the player won");
 
             if (AttemptsLeft == 0)
-                throw new Exception("Game Over: the player lost");
+                throw new InvalidOperationException("Game Over: the player lost");
         }
 
         public TryResponse TryWord(string word)
