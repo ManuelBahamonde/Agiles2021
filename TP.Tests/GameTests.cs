@@ -12,7 +12,7 @@ namespace Tp.Tests
     [TestClass]
     public class GameTests
     {
-        private readonly MainGame game = new MainGame(3, "Manuel", Difficulty.Easy);
+        private readonly MainGame game = new MainGame("Manuel", Difficulty.Easy);
 
         #region Init
         #region Name
@@ -24,10 +24,37 @@ namespace Tp.Tests
             var expected = "Manuel";
 
             // Act
-            var game = new MainGame(3, name, Difficulty.Easy);
+            var game = new MainGame(name, Difficulty.Easy);
 
             // Assert
             Assert.AreEqual(expected, game.Name);
+        }
+        [TestMethod]
+        public void InitGame_NameIsNullOrEmpty()
+        {
+            // Arrange
+            var name = "";
+
+            // Act and Assert
+            Assert.ThrowsException<ArgumentException>(() => new MainGame(name, Difficulty.Easy), "The name is null or empty");
+        }
+        [TestMethod]
+        public void InitGame_NameMaxLength()
+        {
+            // Arrange
+            var name = "holaholaholaholaholahola";
+
+            // Act and Assert
+            Assert.ThrowsException<ArgumentException>(() => new MainGame(name, Difficulty.Easy), "Name maximum length is 20 characters");
+        }
+        [TestMethod]
+        public void InitGame_NameInvalidCharacters()
+        {
+            // Arrange
+            var name = "Juan!!";
+
+            // Act and Assert
+            Assert.ThrowsException<ArgumentException>(() => new MainGame(name, Difficulty.Easy), "Name characters are not valid");
         }
         #endregion
 
@@ -39,7 +66,7 @@ namespace Tp.Tests
             var word = "puma";
 
             // Act
-            var game = new MainGame(3, "Manuel", Difficulty.Easy);
+            var game = new MainGame("Manuel", Difficulty.Easy);
 
             // Assert
             Assert.IsTrue(game.TryWord(word).Match);
@@ -52,7 +79,7 @@ namespace Tp.Tests
             var word = "leopardo";
 
             // Act
-            var game = new MainGame(3, "Manuel", Difficulty.Medium);
+            var game = new MainGame("Manuel", Difficulty.Medium);
 
             // Assert
             Assert.IsTrue(game.TryWord(word).Match);
@@ -65,7 +92,7 @@ namespace Tp.Tests
             var word = "hipopotamo";
 
             // Act
-            var game = new MainGame(3, "Manuel", Difficulty.Hard);
+            var game = new MainGame("Manuel", Difficulty.Hard);
 
             // Assert
             Assert.IsTrue(game.TryWord(word).Match);
@@ -98,17 +125,40 @@ namespace Tp.Tests
 
             // Assert
             Assert.IsFalse(result.Match);
+            Assert.IsTrue(game.IncorrectChars.Contains(letter));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void TryLetter_IsInvalid()
+        public void TryLetter_IsNumber()
         {
             // Arrange
             var letter = '1';
 
+            // Act and Assert
+            Assert.ThrowsException<ArgumentException>(() => game.TryLetter(letter), "Invalid Letter. It must be an alphabetic character.");
+        }
+        [TestMethod]
+        public void TryLetter_IsEmpty()
+        {
+            // Arrange
+            var letter = '\0';
+
+            // Act and Assert
+            Assert.ThrowsException<ArgumentException>(() => game.TryLetter(letter), "Invalid Letter. It must be an alphabetic character.");
+        }
+        [TestMethod]
+        public void TryLetter_IgnoreCase()
+        {
+            // Arrange
+            var letter1 = 'a';
+            var letter2 = 'A';
+
             // Act
-            game.TryLetter(letter);
+            var result1 = game.TryLetter(letter1);
+            var result2 = game.TryLetter(letter2);
+
+            // Assert
+            Assert.AreEqual(result1.Match, result2.Match);
         }
 
         [TestMethod]
@@ -137,6 +187,20 @@ namespace Tp.Tests
 
             // Assert
             Assert.AreEqual(response.AttemptsLeft, expectedAttemptsLeft);
+        }
+
+        [TestMethod]
+        public void TryLetter_Results()
+        {
+            // Arrange
+            var letter = 'a';
+            var expectedResult = "___a";
+
+            // Act
+            game.TryLetter(letter);
+
+            // Assert
+            Assert.AreEqual(game.Result, expectedResult);
         }
         #endregion
 
@@ -195,6 +259,82 @@ namespace Tp.Tests
 
             // Assert
             Assert.AreEqual(response.AttemptsLeft, expectedAttemptsLeft);
+        }
+        #endregion
+
+        #region Game Over
+        [TestMethod]
+        public void TryWord_WinGame()
+        {
+            // Arrange
+            var word = "puma";
+
+            // Act
+            game.TryWord(word);
+
+            // Assert
+            Assert.ThrowsException<Exception>(() => game.TryWord(word), "Game Over: the player won");
+        }
+        [TestMethod]
+        public void TryWord_LoseGame()
+        {
+            // Arrange
+            var word = "error";
+
+            // Act (7 incorrect trials)
+            game.TryWord(word);
+            game.TryWord(word);
+            game.TryWord(word);
+            game.TryWord(word);
+            game.TryWord(word);
+            game.TryWord(word);
+            game.TryWord(word);
+
+            // Assert
+            Assert.ThrowsException<Exception>(() => game.TryWord(word), "Game Over: the player lost");
+        }
+
+        [TestMethod]
+        public void TryLetter_WinGame()
+        {
+            // Arrange
+            var letter1 = 'p';
+            var letter2 = 'u';
+            var letter3 = 'm';
+            var letter4 = 'a';
+
+            // Act
+            game.TryLetter(letter1);
+            game.TryLetter(letter2);
+            game.TryLetter(letter3);
+            game.TryLetter(letter4);
+
+            // Assert
+            Assert.ThrowsException<Exception>(() => game.TryLetter(letter1), "Game Over: the player won");
+        }
+        [TestMethod]
+        public void TryLetter_LoseGame()
+        {
+            // Arrange
+            var letter1 = 'e';
+            var letter2 = 'r';
+            var letter3 = 'r';
+            var letter4 = 'o';
+            var letter5 = 'r';
+            var letter6 = 's';
+            var letter7 = 'b';
+
+            // Act (7 incorrect trials)
+            game.TryLetter(letter1);
+            game.TryLetter(letter2);
+            game.TryLetter(letter3);
+            game.TryLetter(letter4);
+            game.TryLetter(letter5);
+            game.TryLetter(letter6);
+            game.TryLetter(letter7);
+
+            // Assert
+            Assert.ThrowsException<Exception>(() => game.TryLetter(letter1), "Game Over: the player lost");
         }
         #endregion
     }
