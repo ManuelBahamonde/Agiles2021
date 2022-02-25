@@ -1,4 +1,4 @@
-name: Build
+name: Test
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   build_and_test:
-    name: Build
+    name: Run Tests
     runs-on: ubuntu-latest
 
     steps:
@@ -19,5 +19,5 @@ jobs:
         dotnet-version: 5.0.x
     - name: Restore dependencies
       run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
