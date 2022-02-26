@@ -1,0 +1,25 @@
+﻿@model List<SelectListItem>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Ahorcado</h1>
+    <p>Integrantes: Luciano Vanneli y Manuel Bahamonde</p>
+    @Html.DropDownList("DifficultyDropdown", Model, new { @id = "difficulty-dropdown" })
+    <input id="btnStartGame" type="button" value="Comenzar a jugar" onclick="location.href='@Url.Action("StartGame", "Home")'" />
+</div>
+
+<script>
+    const refreshSelectedItem = () => {
+        const startGameButton = document.getElementById('btnStartGame');
+        let link = "location.href='@Url.Action("StartGame", "Home", new { difficultyId = "-1" })'";
+        link = link.replace('-1', difficultyDropdown.value);
+        console.log(link);
+
+        startGameButton.setAttribute('onclick', link);
+    };
+
+    var difficultyDropdown = document.getElementById('difficulty-dropdown');
+    difficultyDropdown.addEventListener('change', refreshSelectedItem)
+</script>
