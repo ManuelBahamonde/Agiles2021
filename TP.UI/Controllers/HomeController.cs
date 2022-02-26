@@ -14,7 +14,6 @@ namespace TP.UI.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
         private MainGame _mainGame;
 
         public HomeController(ILogger<HomeController> logger)
