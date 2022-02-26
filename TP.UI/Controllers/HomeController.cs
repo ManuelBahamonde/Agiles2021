@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Tp.Models;
+using TP.Game;
 using TP.UI.Models;
 
 namespace TP.UI.Controllers
@@ -14,6 +15,7 @@ namespace TP.UI.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private MainGame _mainGame;
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -22,17 +24,10 @@ namespace TP.UI.Controllers
 
         public IActionResult Index()
         {
-            var difficulties = new List<SelectListItem>
-            {
-                new SelectListItem { Value = Difficulty.Easy.ToString("D"), Text = "Facil"},
-                new SelectListItem { Value = Difficulty.Medium.ToString("D"), Text = "Intermedio"},
-                new SelectListItem { Value = Difficulty.Hard.ToString("D"), Text = "Dificil"},
-            };
-
-            return View(difficulties);
+            return View();
         }
 
-        public IActionResult StartGame(int difficultyId)
+        public IActionResult StartGame(string playerName, int difficultyId)
         {
             Difficulty difficulty;
             if ((int)Difficulty.Easy == difficultyId)
@@ -42,9 +37,17 @@ namespace TP.UI.Controllers
             else
                 difficulty = Difficulty.Hard;
 
-            // TODO: create Game instance and implement the rest of the requirements
+            // TODO: Implement the rest of the requirements
+            try
+            {
+                _mainGame = new MainGame(playerName, difficulty);
+            } catch(ArgumentException exc)
+            {
+                ModelState.AddModelError("Argument", exc.Message);
+                return View("Index");
+            }
 
-            return View("MainGame", difficulty.ToString());
+            return View("MainGame", BuildGameInfoModel());
         }
 
         public IActionResult Privacy()
@@ -57,5 +60,14 @@ namespace TP.UI.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        private GameInfoModel BuildGameInfoModel() => new GameInfoModel
+        {
+            Name = _mainGame.Name,
+            Result = _mainGame.Result,
+            AttemptsLeft = _mainGame.AttemptsLeft,
+            Difficulty = _mainGame.Difficulty.ToString(),
+            IncorrectChars = _mainGame.IncorrectChars.ToList(),
+        };
     }
 }

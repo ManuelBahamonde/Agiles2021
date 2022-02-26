@@ -1,24 +1,39 @@
-﻿@model List<SelectListItem>
-@{
+﻿@{
     ViewData["Title"] = "Inicio";
+    var difficultyDropdownItems = new List<SelectListItem>
+    {
+        new SelectListItem { Value = Tp.Models.Difficulty.Easy.ToString("D"), Text = "Facil"},
+        new SelectListItem { Value = Tp.Models.Difficulty.Medium.ToString("D"), Text = "Intermedio"},
+        new SelectListItem { Value = Tp.Models.Difficulty.Hard.ToString("D"), Text = "Dificil"},
+    };
 }
 
 <div class="text-center">
     <h1 class="display-4">Ahorcado</h1>
     <p>Integrantes: Luciano Vanneli y Manuel Bahamonde</p>
-    @Html.DropDownList("DifficultyDropdown", Model, new { @id = "difficulty-dropdown" })
-    <input id="btnStartGame" type="button" value="Comenzar a jugar" onclick="location.href='@Url.Action("StartGame", "Home")'" />
+    <p class="error">@Html.ValidationMessage("Argument", null)</p>
+    <div>
+        <input type="text" id="player-name-textbox" name="playerName" />
+        @Html.DropDownList("DifficultyDropdown", difficultyDropdownItems, new { @id = "difficulty-dropdown" })
+        <input id="btn-start-game" type="button" value="Comenzar a jugar" onclick="location.href='@Url.Action("StartGame", "Home")'" />
+    </div>
 </div>
 
 <script>
     const refreshSelectedItem = () => {
-        const startGameButton = document.getElementById('btnStartGame');
-        let link = "location.href='@Url.Action("StartGame", "Home", new { difficultyId = "-1" })'";
-        link = link.replace('-1', difficultyDropdown.value);
+        const startGameButton = document.getElementById('btn-start-game');
+        const plyNameTextbox = document.getElementById('player-name-textbox');
+
+        let link = "location.href='@Url.Action("StartGame", "Home", new { playerName = "-1", difficultyId = "-2" })'";
+        link = link.replace('-1', plyNameTextbox.value);
+        link = link.replace('-2', difficultyDropdown.value);
 
         startGameButton.setAttribute('onclick', link);
     };
 
-    var difficultyDropdown = document.getElementById('difficulty-dropdown');
-    difficultyDropdown.addEventListener('change', refreshSelectedItem)
+    let plyNameTextbox = document.getElementById('player-name-textbox');
+    let difficultyDropdown = document.getElementById('difficulty-dropdown');
+
+    plyNameTextbox.addEventListener('change', refreshSelectedItem);
+    difficultyDropdown.addEventListener('change', refreshSelectedItem);
 </script>

@@ -1,9 +1,13 @@
-﻿@model string
+﻿@model GameInfoModel
 @{
     ViewData["Title"] = "Ahorcado";
 }
 
 <div>
     <h1>Juego principal</h1>
-    <span>@Model</span>
+    <p>Player Name: @Model.Name</p>
+    <p>Result: @Model.Result</p>
+    <p>Difficulty: @Model.Difficulty</p>
+    <p>Attempts Left: @Model.AttemptsLeft</p>
+    <p># of Incorrect Chars: @Model.IncorrectChars.Count</p>
 </div>
