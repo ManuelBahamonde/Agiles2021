@@ -1,6 +1,6 @@
 ﻿@model List<SelectListItem>
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Inicio";
 }
 
 <div class="text-center">
@@ -15,7 +15,6 @@
         const startGameButton = document.getElementById('btnStartGame');
         let link = "location.href='@Url.Action("StartGame", "Home", new { difficultyId = "-1" })'";
         link = link.replace('-1', difficultyDropdown.value);
-        console.log(link);
 
         startGameButton.setAttribute('onclick', link);
     };
