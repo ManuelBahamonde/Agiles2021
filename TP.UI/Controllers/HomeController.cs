@@ -16,10 +16,7 @@ namespace TP.UI.Controllers
     {
         private MainGame _mainGame;
 
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
+        public HomeController() { }
 
         public IActionResult Index()
         {
