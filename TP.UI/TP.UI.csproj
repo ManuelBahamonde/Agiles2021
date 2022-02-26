@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TP.Game\Tp.Game.csproj" />
+    <ProjectReference Include="..\Tp.Models\Tp.Models.csproj" />
+  </ItemGroup>
+
+</Project>
+	
