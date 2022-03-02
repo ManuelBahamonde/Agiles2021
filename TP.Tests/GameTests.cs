@@ -308,7 +308,7 @@ namespace Tp.Tests
             var word = "error!";
 
             // Act and Assert
-            Assert.ThrowsException<InvalidOperationException>(() => game.TryWord(word), "Invalid Word.");
+            Assert.ThrowsException<ArgumentException>(() => game.TryWord(word), "Invalid Word.");
         }
 
         [TestMethod]
