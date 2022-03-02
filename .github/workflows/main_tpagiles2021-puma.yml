@@ -11,6 +11,7 @@ on:
 
 jobs:
   build:
+    name: Build
     runs-on: windows-latest
 
     steps:
@@ -35,6 +36,7 @@ jobs:
           path: ${{env.DOTNET_ROOT}}/myapp
 
   deploy:
+    name: Deploy
     runs-on: windows-latest
     needs: build
     environment:
