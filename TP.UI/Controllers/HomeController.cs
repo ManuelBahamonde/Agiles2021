@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using Tp.Models;
 using TP.Game;
 using TP.UI.Models;
@@ -100,7 +96,7 @@ namespace TP.UI.Controllers
         }
 
         #region Helpers
-        private GameInfoModel BuildGameInfoModel() => new GameInfoModel
+        private static GameInfoModel BuildGameInfoModel() => new GameInfoModel
         {
             Name = _mainGame.Name,
             Result = _mainGame.Result,
@@ -109,7 +105,7 @@ namespace TP.UI.Controllers
             IncorrectChars = _mainGame.IncorrectChars.ToList(),
         };
 
-        private GameStatusInfoResponse BuildGameStatusInfoResponse(TryResponse result) => new()
+        private static GameStatusInfoResponse BuildGameStatusInfoResponse(TryResponse result) => new()
         {
             IsMatch = result.Match,
             Result = _mainGame.Result,

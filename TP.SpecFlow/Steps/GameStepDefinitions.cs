@@ -14,9 +14,15 @@ namespace TP.SpecFlow.Steps
     [Binding]
     public sealed class GameStepDefinitions
     {
-        private readonly ScenarioContext _scenarioContext;
         private IWebDriver _driver;
         private string _baseUrl;
+
+        public GameStepDefinitions()
+        {
+            new DriverManager().SetUpDriver(new ChromeConfig());
+            _driver = new ChromeDriver();
+            _baseUrl = "https://tpagiles2021-puma.azurewebsites.net/";
+        }
 
         [BeforeScenario]
         public void TestInitialize()
@@ -28,8 +34,6 @@ namespace TP.SpecFlow.Steps
 
             new DriverManager().SetUpDriver(new ChromeConfig());
             _driver = new ChromeDriver(option);
-            _baseUrl = "https://tpagiles2021-puma.azurewebsites.net/";
-            _baseUrl = "https://tpagiles2021-puma.azurewebsites.net/";
         }
 
         [AfterScenario]

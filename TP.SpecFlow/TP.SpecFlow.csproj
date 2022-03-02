@@ -21,17 +21,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Drivers\" />
     <Folder Include="Hooks\" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Tp.Models\Tp.Models.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Drivers\chromedriver.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>

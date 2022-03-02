@@ -1,9 +1,8 @@
 name: Test
 
 on:
-  push:
-    branches:
-      - main
+  repository_dispatch:
+    types: [on-deployed]
 
 jobs:
   build_and_test:
