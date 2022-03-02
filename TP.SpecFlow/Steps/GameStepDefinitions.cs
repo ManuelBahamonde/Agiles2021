@@ -6,6 +6,8 @@ using System;
 using System.Threading;
 using TechTalk.SpecFlow;
 using Tp.Models;
+using WebDriverManager;
+using WebDriverManager.DriverConfigs.Impl;
 
 namespace TP.SpecFlow.Steps
 {
@@ -19,8 +21,14 @@ namespace TP.SpecFlow.Steps
         [BeforeScenario]
         public void TestInitialize()
         {
-            var path = AppDomain.CurrentDomain.BaseDirectory + @"Drivers";
-            _driver = new ChromeDriver(path);
+            ChromeOptions option = new ChromeOptions();
+            option.AddArguments("start-maximized");
+            option.AddArguments("--disable-gpu");
+            option.AddArguments("--headless");
+
+            new DriverManager().SetUpDriver(new ChromeConfig());
+            _driver = new ChromeDriver(option);
+            _baseUrl = "https://tpagiles2021-puma.azurewebsites.net/";
             _baseUrl = "https://tpagiles2021-puma.azurewebsites.net/";
         }
 
