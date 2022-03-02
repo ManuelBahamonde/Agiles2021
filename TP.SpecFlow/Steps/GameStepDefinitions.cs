@@ -9,18 +9,17 @@ using Tp.Models;
 using WebDriverManager;
 using WebDriverManager.DriverConfigs.Impl;
 
+#pragma warning disable CS8618 // Un campo que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de declararlo como que admite un valor NULL.
 namespace TP.SpecFlow.Steps
 {
     [Binding]
     public sealed class GameStepDefinitions
     {
         private IWebDriver _driver;
-        private string _baseUrl;
+        private readonly string _baseUrl;
 
         public GameStepDefinitions()
         {
-            new DriverManager().SetUpDriver(new ChromeConfig());
-            _driver = new ChromeDriver();
             _baseUrl = "https://tpagiles2021-puma.azurewebsites.net/";
         }
 
