@@ -14,7 +14,7 @@ namespace TP.UI.Controllers
 {
     public class HomeController : Controller
     {
-        private MainGame _mainGame;
+        private static MainGame _mainGame;
 
         public HomeController() { }
 
@@ -33,7 +33,6 @@ namespace TP.UI.Controllers
             else
                 difficulty = Difficulty.Hard;
 
-            // TODO: Implement the rest of the requirements
             try
             {
                 _mainGame = new MainGame(playerName, difficulty);
@@ -44,6 +43,49 @@ namespace TP.UI.Controllers
             }
 
             return View("MainGame", BuildGameInfoModel());
+        }
+
+        [HttpPost]
+        public IActionResult TryLetter([FromBody] TryLetterRequest rq)
+        {
+            var letter = rq.Letter;
+            try
+            {
+                var result = _mainGame.TryLetter(letter);
+
+                return Json(BuildGameStatusInfoResponse(result));
+            } catch (ArgumentException exc)
+            {
+                Response.StatusCode = 400;
+                return Json(new { Error = exc.Message });
+            } catch (InvalidOperationException exc)
+            {
+                Response.StatusCode = 400;
+                return Json(new { Error = exc.Message });
+            }
+        }
+
+        [HttpPost]
+        public IActionResult TryWord([FromBody] TryWordRequest rq)
+        {
+            var word = rq.Word;
+
+            try
+            {
+                var result = _mainGame.TryWord(word);
+
+                return Json(BuildGameStatusInfoResponse(result));
+            }
+            catch (ArgumentException exc)
+            {
+                Response.StatusCode = 400;
+                return Json(new { Error = exc.Message });
+            }
+            catch (InvalidOperationException exc)
+            {
+                Response.StatusCode = 400;
+                return Json(new { Error = exc.Message });
+            }
         }
 
         public IActionResult Privacy()
@@ -57,6 +99,7 @@ namespace TP.UI.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
+        #region Helpers
         private GameInfoModel BuildGameInfoModel() => new GameInfoModel
         {
             Name = _mainGame.Name,
@@ -65,5 +108,17 @@ namespace TP.UI.Controllers
             Difficulty = _mainGame.Difficulty.ToString(),
             IncorrectChars = _mainGame.IncorrectChars.ToList(),
         };
-    }
+
+        private GameStatusInfoResponse BuildGameStatusInfoResponse(TryResponse result) => new()
+        {
+            IsMatch = result.Match,
+            Result = _mainGame.Result,
+            AttemptsLeft = _mainGame.AttemptsLeft,
+            IncorrectChars = _mainGame.IncorrectChars.ToList(),
+            GameOver = _mainGame.IsGameOver,
+            Win = _mainGame.Win,
+        }; 
+
+    #endregion
+}
 }

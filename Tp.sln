@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tp.Game", "TP.Game\Tp.Game.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tp.Models", "Tp.Models\Tp.Models.csproj", "{72B29B9E-4F49-4A38-91BE-8BF6602D1669}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TP.UI", "TP.UI\TP.UI.csproj", "{2AFCB84D-6C94-4779-A0CA-DF6533BB3E32}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TP.UI", "TP.UI\TP.UI.csproj", "{2AFCB84D-6C94-4779-A0CA-DF6533BB3E32}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TP.SpecFlow", "TP.SpecFlow\TP.SpecFlow.csproj", "{7EAB7D1B-12E4-4AC2-B0C7-6893DCDDBABC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{2AFCB84D-6C94-4779-A0CA-DF6533BB3E32}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2AFCB84D-6C94-4779-A0CA-DF6533BB3E32}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2AFCB84D-6C94-4779-A0CA-DF6533BB3E32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7EAB7D1B-12E4-4AC2-B0C7-6893DCDDBABC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EAB7D1B-12E4-4AC2-B0C7-6893DCDDBABC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EAB7D1B-12E4-4AC2-B0C7-6893DCDDBABC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EAB7D1B-12E4-4AC2-B0C7-6893DCDDBABC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

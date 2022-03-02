@@ -19,38 +19,57 @@
             </div>
             <div class="row">
                 <div class="col">
-                    <p>Attempts Left: @Model.AttemptsLeft</p>
+                    <p>Attempts Left: <span id="attempts-left" style="font-weight: bold;">@Model.AttemptsLeft</span></p>
                 </div>
                 <div class="col">
-                    <p># of Incorrect Chars: @Model.IncorrectChars.Count</p>
+                    <p>Incorrect Chars: <span id="incorrect-chars" style="font-weight: bold;"></span></p>
                 </div>
             </div>
         </div>
     </div>
     <div class="card text-center">
         <div class="card-body">
+            <div id="error-container" style="display: none;" class="row">
+                <div class="col">
+                    <p id="error-text" class="error"></p>
+                </div>
+            </div>
+            <div id="game-over-container" style="display: none;" class="row">
+                <div class="col">
+                    <p id="game-over-text"></p>
+                </div>
+                <div class="col">
+                    <input type="button" class="btn btn-danger" id="reset-button" value="Reset" onclick="location.href='@Url.Action("Index", "Home")'" />
+                </div>
+            </div>
             <div class="row">
                 <div class="col">
+                    <div class="row">
+                        <div class="col">
+                            <p id="result" style="font-size: 5rem; letter-spacing: 1rem;">@Model.Result</p>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col">
                             <canvas id="hangman-canvas" width="679" height="290"></canvas>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col">
-                            <p class="text-lg-center">Result: @Model.Result</p>
-                        </div>
-                    </div>
                 </div>
                 <div class="col">
-                    <div class="row">
+                    <div class="row mb-2">
                         <div class="col">
-                            <p>Probar palabra</p>
+                            <input type="text" id="try-word-textbox" />
+                        </div>
+                        <div class="col">
+                            <input type="button" class="btn btn-primary" id="try-word-button" value="Try Word!" disabled />
                         </div>
                     </div>
                     <div class="row">
                         <div class="col">
-                            <p>Probar Letra</p>
+                            <input type="text" id="try-letter-textbox" maxlength="1" />
+                        </div>
+                        <div class="col">
+                            <input type="button" class="btn btn-primary" id="try-letter-button" value="Try Letter!" disabled />
                         </div>
                     </div>
                 </div>
@@ -60,8 +79,9 @@
 </div>
 
 <script>
+    // Canvas
     const drawHangman = () => {
-        const attemptsLeft = @Model.AttemptsLeft;
+        const attemptsLeft = Number.parseInt(document.getElementById('attempts-left').innerHTML);
 
         var canvas = document.getElementById("hangman-canvas");
         var c = canvas.getContext('2d');
@@ -70,8 +90,6 @@
         canvas.width = canvas.width;
         c.lineWidth = 10;
         c.strokeStyle = 'black';
-        c.font = 'bold 24px Optimer, Arial, Helvetica, sans-serif';
-        c.fillStyle = 'red';
 
         // Ground
         drawLine(c, [20, 190], [180, 190]);
@@ -113,19 +131,125 @@
                 drawLine(c, [145, 130], [130, 170]);
             }
             if (attemptsLeft < 1) {
-                // Right leg and end game
+                // Right leg
                 drawLine(c, [145, 130], [160, 170]);
-                c.fillText('Game over', 45, 110);
             }
         }
     }
-
     const drawLine = (context, from, to) => {
         context.beginPath();
         context.moveTo(from[0], from[1]);
         context.lineTo(to[0], to[1]);
         context.stroke();
     }
-
     drawHangman();
+
+    // Handlers
+    const handleTrySuccess = async (response) => {
+        if (response.status !== 200)
+            throw new Error((await response.json()).error);
+
+        response.json().then(({ attemptsLeft, gameOver, incorrectChars, isMatch, result, win }) => {
+            // Clearing errors
+            const errorContainer = document.getElementById('error-container');
+            const errorNode = document.getElementById('error-text');
+            errorContainer.style = 'display: none';
+            errorNode.innerHTML = '';
+
+            // Updating Game Status Info
+            const attemptsLeftNode = document.getElementById('attempts-left');
+            const incorrectCharsNode = document.getElementById('incorrect-chars');
+            const resultNode = document.getElementById('result');
+            const wordTextBox = document.getElementById('try-word-textbox');
+            const tryWordBtn = document.getElementById('try-word-button');
+            const letterTextBox = document.getElementById('try-letter-textbox');
+            const tryLetterBtn = document.getElementById('try-letter-button');
+
+            attemptsLeftNode.innerHTML = attemptsLeft;
+            incorrectCharsNode.innerHTML = incorrectChars.join(' - '),
+            resultNode.innerHTML = result;
+            wordTextBox.value = '';
+            letterTextBox.value = '';
+            tryWordBtn.disabled = true;
+            tryLetterBtn.disabled = true;
+
+            if (gameOver) {
+                const tryWordButton = document.getElementById('try-word-button');
+                const tryLetterButton = document.getElementById('try-letter-button');
+                const gameOverContainer = document.getElementById('game-over-container');
+                const gameOverText = document.getElementById('game-over-text');
+
+                wordTextBox.disabled = true;
+                letterTextBox.disabled = true;
+                tryWordButton.disabled = true;
+                tryLetterButton.disabled = true;
+                gameOverContainer.style = 'display: block;';
+
+                let innerHTML;
+                let style = 'font-size: 3rem;';
+                if (win) {
+                    innerHTML = 'You won!';
+                    style += '; color: green';
+                } else {
+                    innerHTML = 'You lost!';
+                    style += '; color: red';
+                }
+                gameOverText.innerHTML = innerHTML;
+                gameOverText.style = style;
+            }
+
+            drawHangman();
+        });
+    }
+    const handleTryError = (error) => {
+        const errorContainer = document.getElementById('error-container');
+        const errorNode = document.getElementById('error-text');
+
+        errorContainer.style = 'display: block';
+        errorNode.innerHTML = error;
+    };
+
+    const tryWordBtn = document.getElementById('try-word-button');
+    const tryWordTextBox = document.getElementById('try-word-textbox');
+    const tryLetterBtn = document.getElementById('try-letter-button');
+    const tryLetterTextBox = document.getElementById('try-letter-textbox');
+    const resetBtn = document.getElementById('reset-button');
+
+    const handleTextBoxInput = (tbNode, btnNode) => {
+        if (tbNode.value.length === 0) btnNode.disabled = true;
+        else btnNode.disabled = false;
+    }
+
+    tryWordBtn.addEventListener('click', () => {
+        const word = tryWordTextBox.value;
+
+        fetch('TryWord', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: JSON.stringify({
+                word,
+            }),
+        })
+            .then(handleTrySuccess)
+            .catch(handleTryError);
+    });
+    tryLetterBtn.addEventListener('click', () => {
+        const letter = tryLetterTextBox.value;
+
+        fetch('TryLetter', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: JSON.stringify({
+                letter,
+            }),
+        })
+            .then(handleTrySuccess)
+            .catch(handleTryError);
+    });
+    tryWordTextBox.addEventListener('input', () => handleTextBoxInput(tryWordTextBox, tryWordBtn));
+    tryLetterTextBox.addEventListener('input', () => handleTextBoxInput(tryLetterTextBox, tryLetterBtn));
 </script>

@@ -268,21 +268,22 @@ namespace Tp.Tests
         {
             // Arrange
             var word = "puma";
+            var expected = true;
 
             // Act
             game.TryWord(word);
 
             // Assert
-            Assert.ThrowsException<InvalidOperationException>(() => game.TryWord(word), "Game Over: the player won");
+            Assert.AreEqual(game.IsGameOver && game.Win, expected);
         }
         [TestMethod]
         public void TryWord_LoseGame()
         {
             // Arrange
             var word = "error";
+            var expected = true;
 
-            // Act (7 incorrect trials)
-            game.TryWord(word);
+            // Act (6 incorrect trials)
             game.TryWord(word);
             game.TryWord(word);
             game.TryWord(word);
@@ -291,7 +292,7 @@ namespace Tp.Tests
             game.TryWord(word);
 
             // Assert
-            Assert.ThrowsException<InvalidOperationException>(() => game.TryWord(word), "Game Over: the player lost");
+            Assert.AreEqual(game.IsGameOver && !game.Win, expected);
         }
 
         [TestMethod]
@@ -302,6 +303,7 @@ namespace Tp.Tests
             var letter2 = 'u';
             var letter3 = 'm';
             var letter4 = 'a';
+            var expected = true;
 
             // Act
             game.TryLetter(letter1);
@@ -310,7 +312,7 @@ namespace Tp.Tests
             game.TryLetter(letter4);
 
             // Assert
-            Assert.ThrowsException<InvalidOperationException>(() => game.TryLetter(letter1), "Game Over: the player won");
+            Assert.AreEqual(game.IsGameOver && game.Win, expected);
         }
         [TestMethod]
         public void TryLetter_LoseGame()
@@ -322,19 +324,18 @@ namespace Tp.Tests
             var letter4 = 'o';
             var letter5 = 'r';
             var letter6 = 's';
-            var letter7 = 'b';
+            var expected = true;
 
-            // Act (7 incorrect trials)
+            // Act (6 incorrect trials)
             game.TryLetter(letter1);
             game.TryLetter(letter2);
             game.TryLetter(letter3);
             game.TryLetter(letter4);
             game.TryLetter(letter5);
             game.TryLetter(letter6);
-            game.TryLetter(letter7);
 
             // Assert
-            Assert.ThrowsException<InvalidOperationException>(() => game.TryLetter(letter1), "Game Over: the player lost");
+            Assert.AreEqual(game.IsGameOver && !game.Win, expected);
         }
         #endregion
     }

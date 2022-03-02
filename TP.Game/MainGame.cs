@@ -23,9 +23,11 @@ namespace TP.Game
         public HashSet<char> CorrectChars { get; private set; } = new HashSet<char>();
         public HashSet<char> IncorrectChars { get; private set; } = new HashSet<char>();
 
-        public int AttemptsLeft { get; private set; } = 7;
+        public int AttemptsLeft { get; private set; } = 6;
         public string Name { get; }
         public Difficulty Difficulty { get; }
+        public bool IsGameOver { get => Result == _secretWord || AttemptsLeft == 0; }
+        public bool Win { get => IsGameOver && AttemptsLeft > 0; }
         #endregion
 
         #region Constructor
@@ -58,11 +60,16 @@ namespace TP.Game
         #region Methods
         private void ValidateTry()
         {
-            if (CorrectChars.Count == _secretWord.Length)
-                throw new InvalidOperationException("Game Over: the player won");
+            if (IsGameOver)
+            {
+                string gameOverMessage;
+                if (Win)
+                    gameOverMessage = "Game Over: the player won";
+                else
+                    gameOverMessage = "Game Over: the player lost";
 
-            if (AttemptsLeft == 0)
-                throw new InvalidOperationException("Game Over: the player lost");
+                throw new InvalidOperationException(gameOverMessage);
+            }
         }
 
         public TryResponse TryWord(string word)
@@ -70,6 +77,9 @@ namespace TP.Game
             ValidateTry();
 
             var response = new TryResponse();
+
+            if (string.IsNullOrEmpty(word) || word.Any(x => !char.IsLetter(x)))
+                throw new ArgumentException("Invalid Word.");
 
             var isMatch = _secretWord == word.ToLower();
             if (isMatch)
@@ -97,7 +107,8 @@ namespace TP.Game
             if (letter == '\0' || !char.IsLetter(letter))
                 throw new ArgumentException("Invalid Letter. It must be an alphabetic character.");
 
-            var isMatch = _secretWord.Contains(letter, StringComparison.InvariantCultureIgnoreCase);
+            letter = char.ToLower(letter);
+            var isMatch = _secretWord.Contains(letter);
             if (isMatch)
             {
                 CorrectChars.Add(letter);
