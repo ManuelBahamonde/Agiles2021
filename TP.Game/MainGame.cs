@@ -46,7 +46,6 @@ namespace TP.Game
             Name = name;
             Difficulty = difficulty;
 
-            // TODO: Generate a random word and assign it to _secretWord?
             _secretWord = difficulty switch
             {
                 Difficulty.Easy => "puma",

@@ -64,11 +64,13 @@ namespace Tp.Tests
         {
             // Arrange
             var word = "puma";
+            var difficulty = Difficulty.Easy;
 
             // Act
-            var game = new MainGame("Manuel", Difficulty.Easy);
+            var game = new MainGame("Manuel", difficulty);
 
             // Assert
+            Assert.AreEqual(game.Difficulty, difficulty);
             Assert.IsTrue(game.TryWord(word).Match);
         }
 
@@ -77,11 +79,13 @@ namespace Tp.Tests
         {
             // Arrange
             var word = "leopardo";
+            var difficulty = Difficulty.Medium;
 
             // Act
-            var game = new MainGame("Manuel", Difficulty.Medium);
+            var game = new MainGame("Manuel", difficulty);
 
             // Assert
+            Assert.AreEqual(game.Difficulty, difficulty);
             Assert.IsTrue(game.TryWord(word).Match);
         }
 
@@ -90,11 +94,13 @@ namespace Tp.Tests
         {
             // Arrange
             var word = "hipopotamo";
+            var difficulty = Difficulty.Hard;
 
             // Act
-            var game = new MainGame("Manuel", Difficulty.Hard);
+            var game = new MainGame("Manuel", difficulty);
 
             // Assert
+            Assert.AreEqual(game.Difficulty, difficulty);
             Assert.IsTrue(game.TryWord(word).Match);
         }
         #endregion
@@ -296,6 +302,16 @@ namespace Tp.Tests
         }
 
         [TestMethod]
+        public void TryWord_InvalidWord()
+        {
+            // Arrange
+            var word = "error!";
+
+            // Act and Assert
+            Assert.ThrowsException<InvalidOperationException>(() => game.TryWord(word), "Invalid Word.");
+        }
+
+        [TestMethod]
         public void TryLetter_WinGame()
         {
             // Arrange
@@ -336,6 +352,37 @@ namespace Tp.Tests
 
             // Assert
             Assert.AreEqual(game.IsGameOver && !game.Win, expected);
+        }
+
+        [TestMethod]
+        public void Try_CheckWonExceptions()
+        {
+            // Arrange
+            var word = "puma";
+
+            // Act
+            game.TryWord(word);
+
+            // Assert
+            Assert.ThrowsException<InvalidOperationException>(() => game.TryWord(word), "Game Over: the player won");
+        }
+
+        [TestMethod]
+        public void Try_CheckLostExceptions()
+        {
+            // Arrange
+            var letter = 'e';
+
+            // Act (6 incorrect trials)
+            game.TryLetter(letter);
+            game.TryLetter(letter);
+            game.TryLetter(letter);
+            game.TryLetter(letter);
+            game.TryLetter(letter);
+            game.TryLetter(letter);
+
+            // Assert
+            Assert.ThrowsException<InvalidOperationException>(() => game.TryLetter(letter), "Game Over: the player lost");
         }
         #endregion
     }
