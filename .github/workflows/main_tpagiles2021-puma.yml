@@ -55,3 +55,13 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_B7961263E0754F87BB7FC1C3C20A4171 }}
           package: .
+  
+  trigger-tests:
+    name: Trigger Tests
+    needs: deploy
+    if: success()
+    uses: peter-evans/repository-dispatch@v1
+    with:
+      token: ${{ secrets.REPO_DISPATCH_TOKEN }}
+      repository: ${{ github.repository }}
+      event-type: on-deployed

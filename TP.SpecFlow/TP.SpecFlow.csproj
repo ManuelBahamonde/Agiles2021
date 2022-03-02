@@ -27,4 +27,10 @@
     <ProjectReference Include="..\Tp.Models\Tp.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Drivers\chromedriver.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
