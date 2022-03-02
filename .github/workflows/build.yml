@@ -43,6 +43,8 @@ jobs:
         shell: powershell
         run: |
           dotnet restore
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"ManuelBahamonde_Agiles2021" /o:"agilesahorcado" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+          dotnet build --no-restore
+          coverlet --target "dotnet" --targetargs "test TP.Tests --no-build" --output coverage --format opencover .\TP.Tests\bin\Debug\net5.0\Tp.Tests.dll
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"ManuelBahamonde_Agiles2021" /o:"agilesahorcado" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="coverage.opencover.xml"
           dotnet build --no-restore
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
