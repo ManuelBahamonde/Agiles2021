@@ -26,6 +26,7 @@ namespace TP.SpecFlow.Steps
         [BeforeScenario]
         public void TestInitialize()
         {
+            // TEST
             ChromeOptions option = new ChromeOptions();
             option.AddArguments("start-maximized");
             option.AddArguments("--disable-gpu");
